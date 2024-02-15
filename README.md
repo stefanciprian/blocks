@@ -1,4 +1,5 @@
-# README
+# blocks
+Build simple apps
 
 ## About
 
