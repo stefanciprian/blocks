@@ -3,6 +3,8 @@ import { Tabs, Box } from '@radix-ui/themes';
 import { AppManagement } from './components/AppManagement/AppManagement';
 import { Overview } from './components/Overview/Overview';
 import { Settings } from './components/Settings/Settings';
+import { Toaster } from './components/ui/toaster';
+import { AppManagementProvider } from './components/AppManagement/AppManagementProvider';
 
 function App() {
 
@@ -17,7 +19,9 @@ function App() {
 
                 <Box px="4" pt="3" pb="2">
                     <Tabs.Content value="app-management">
-                        <AppManagement />
+                        <AppManagementProvider>
+                            <AppManagement />
+                        </AppManagementProvider>
                     </Tabs.Content>
 
                     <Tabs.Content value="overview">
@@ -29,6 +33,7 @@ function App() {
                     </Tabs.Content>
                 </Box>
             </Tabs.Root>
+            <Toaster />
         </div>
     )
 }
