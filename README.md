@@ -1,4 +1,5 @@
-# blocks
+# Blocks
+
 Build simple apps
 
 ## About

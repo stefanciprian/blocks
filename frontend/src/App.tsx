@@ -1,26 +1,34 @@
-import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
 import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
+import { Tabs, Box } from '@radix-ui/themes';
+import { AppManagement } from './components/AppManagement/AppManagement';
+import { Overview } from './components/Overview/Overview';
+import { Settings } from './components/Settings/Settings';
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
-
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
 
     return (
         <div id="App">
-            <img src={logo} id="logo" alt="logo"/>
-            <div id="result" className="result">{resultText}</div>
-            <div id="input" className="input-box">
-                <input id="name" className="input" onChange={updateName} autoComplete="off" name="input" type="text"/>
-                <button className="btn" onClick={greet}>Greet</button>
-            </div>
+            <Tabs.Root defaultValue="app-management">
+                <Tabs.List>
+                    <Tabs.Trigger value="app-management">App Management</Tabs.Trigger>
+                    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+                    <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+                </Tabs.List>
+
+                <Box px="4" pt="3" pb="2">
+                    <Tabs.Content value="app-management">
+                        <AppManagement />
+                    </Tabs.Content>
+
+                    <Tabs.Content value="overview">
+                        <Overview />
+                    </Tabs.Content>
+
+                    <Tabs.Content value="settings">
+                        <Settings />
+                    </Tabs.Content>
+                </Box>
+            </Tabs.Root>
         </div>
     )
 }
