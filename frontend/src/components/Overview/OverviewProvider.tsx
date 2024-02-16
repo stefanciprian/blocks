@@ -1,9 +1,11 @@
 import { createContext, useContext } from 'react';
-import { GetSelectedApp, SelectFolder } from '../../../wailsjs/go/main/App';
+import { GenerateApp, GetSelectedApp, SelectFolder } from '../../../wailsjs/go/main/App';
+import { App } from '@/src/types/App';
 
 
 interface OverviewContextType {
     selectFolder: () => Promise<string | null>,
+    generateApp: (app: App) => Promise<void>,
     getSelectedApp: () => Promise<any>,
 }
 
@@ -15,6 +17,17 @@ export function OverviewProvider({ children }: any) {
         const app = await GetSelectedApp();
         console.log('Selected app:', app);
         return app;
+    }
+
+    const generateApp = async (app: App) => {
+        console.log('Generate app:', app);
+        // Use the app as needed in your application
+        try {
+            const result = await GenerateApp(JSON.stringify(app));
+            console.log('Generated app:', result);
+        } catch (error) {
+            console.error('Error generating app:', error);
+        }
     }
 
     const selectFolder = async () => {
@@ -31,6 +44,7 @@ export function OverviewProvider({ children }: any) {
 
     const contextValue = {
         getSelectedApp,
+        generateApp,
         selectFolder,
     }
 

@@ -8,7 +8,7 @@ import { App } from '../../types/App';
 
 export function Overview() {
     const [path, setPath] = useState('');
-    const { selectFolder, getSelectedApp } = useOverviewContext();
+    const { selectFolder, generateApp, getSelectedApp } = useOverviewContext();
     const [selectedApp, setSelectedApp] = useState<App | null>(null);
     const { toast } = useToast();
 
@@ -24,6 +24,13 @@ export function Overview() {
         }
         console.log('Selected folder path:', path);
         setPath(path);
+        if (selectedApp !== null) {
+            const app: App = {
+                ...selectedApp,
+                path,
+            }
+            setSelectedApp(app);
+        }
         toast({
             title: "Folder selected",
             description: `We have selected the folder for you.
@@ -33,12 +40,42 @@ export function Overview() {
         })
     }
 
+    const handleGeneration = async () => {
+        if (selectedApp === null) {
+            toast({
+                title: "No app selected",
+                description: `Please select an app first.`,
+            })
+            return;
+        }
+        if (selectedApp.path === "N/A" || selectedApp.path === "") {
+            toast({
+                title: "No path selected",
+                description: `Please select a path first.`,
+            })
+            return;
+        }
+        if (selectedApp.is_generated) {
+            toast({
+                title: "App already generated",
+                description: `The app is already generated.`,
+            })
+            return;
+        }
+        await generateApp(selectedApp);
+        toast({
+            title: "Generating app",
+            description: `We are generating the app for you.`,
+        })
+    }
+
     useEffect(() => {
         console.log('Path:', path);
         console.log('Select folder:', selectFolder);
 
         getSelectedApp().then((app) => {
             console.log('Selected app:', app);
+            setSelectedApp(app);
         })
     }, [])
 
@@ -56,14 +93,22 @@ export function Overview() {
                 </div>
 
                 <h2 className="text-3xl font-bold tracking-tight">Selected app:</h2>
-                <p></p>
-
+                {selectedApp === null ? <p>No app selected</p> : <p>{selectedApp?.id} {selectedApp?.name}</p>}
 
                 <h2 className="text-3xl font-bold tracking-tight">Select path where the app should be located:</h2>
 
                 <div className="flex items-center space-x-2">
                     <Input type="email" placeholder="Path" value={path} />
-                    <Button onClick={handleFolderSelection}>Select</Button>
+                    <Button disabled={selectedApp === null} onClick={handleFolderSelection}>Select</Button>
+                </div>
+
+                <h2 className="text-3xl font-bold tracking-tight">Generate app:</h2>
+                <div className="flex items-center space-x-2">
+                    <Button disabled={
+                        (selectedApp !== null) &&
+                        (selectedApp.path !== ("N/A" || ""))
+                        && selectedApp.is_generated}
+                        onClick={handleGeneration}>Generate</Button>
                 </div>
             </div>
         </div>

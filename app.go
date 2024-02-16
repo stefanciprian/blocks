@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -45,6 +46,56 @@ func (a *App) CheckNodeJS() (string, error) {
 	// Trim the output to get a clean version string
 	version := strings.TrimSpace(string(output))
 	return version, nil
+}
+
+func (a *App) GenerateApp(applicationJsonString string) {
+	var application Application
+	err := json.Unmarshal([]byte(applicationJsonString), &application)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(application)
+	// Check if NestJS is installed
+	cmdNestJS := exec.Command("nest", "-v")
+	_, errNestJS := cmdNestJS.Output()
+
+	if errNestJS != nil {
+		// NestJS is not installed
+		fmt.Println("NestJS is not installed. Please install it using the following command:")
+		fmt.Println("npm install -g @nestjs/cli")
+		// Install NestJS
+		cmdInstallNestJS := exec.Command("npm", "install", "-g", "@nestjs/cli")
+		_, errInstallNestJS := cmdInstallNestJS.Output()
+		if errInstallNestJS != nil {
+			// An error occurred
+			fmt.Println("Error installing NestJS:", errInstallNestJS)
+			return
+		}
+	}
+
+	// Change to the selected folder
+	err = os.Chdir(application.Path)
+	if err != nil {
+		fmt.Println("Error changing directory:", err)
+		return
+	}
+
+	// The command to generate a NestJS app
+	// nest new backend --skip-git --package-manager=npm --no-interactive
+
+	cmd := exec.Command("nest", "new", application.Name, "--skip-git", "--package-manager=npm")
+	// Run the command and capture the output
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		// An error occurred
+		fmt.Println("Error generating app:", err)
+		fmt.Println(string(output))
+		return
+	}
+
+	// Success
+
+	fmt.Println("App generated successfully!")
 }
 
 func (a *App) GetSelectedApp() Application {

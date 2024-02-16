@@ -4,6 +4,8 @@ import {main} from '../models';
 
 export function CheckNodeJS():Promise<string>;
 
+export function GenerateApp(arg1:string):Promise<void>;
+
 export function GetApps():Promise<Array<main.Application>>;
 
 export function GetSelectedApp():Promise<main.Application>;

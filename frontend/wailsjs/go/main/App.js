@@ -6,6 +6,10 @@ export function CheckNodeJS() {
   return window['go']['main']['App']['CheckNodeJS']();
 }
 
+export function GenerateApp(arg1) {
+  return window['go']['main']['App']['GenerateApp'](arg1);
+}
+
 export function GetApps() {
   return window['go']['main']['App']['GetApps']();
 }
