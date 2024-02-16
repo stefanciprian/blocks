@@ -1,10 +1,14 @@
 import { useToast } from '../ui/use-toast';
 import { useOverviewContext } from './OverviewProvider';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { useState } from 'react';
 
 
 export function Overview() {
     const { toast } = useToast();
     const { selectFolder } = useOverviewContext();
+    const [path, setPath] = useState('');
 
     const handleFolderSelection = async () => {
         const path = await selectFolder();
@@ -17,6 +21,7 @@ export function Overview() {
             return;
         }
         console.log('Selected folder path:', path);
+        setPath(path);
         toast({
             title: "Folder selected",
             description: `We have selected the folder for you.
@@ -41,8 +46,8 @@ export function Overview() {
                 Select path where the app should be located
 
                 <div className="flex items-center space-x-2">
-                    <input type="text" className="border-2 border-gray-400 rounded-md p-2" placeholder="Path" />
-                    <button onClick={handleFolderSelection} className="bg-blue-500 text-white rounded-md p-2">Select</button>
+                    <Input type="email" placeholder="Path" value={path} />
+                    <Button onClick={handleFolderSelection}>Select</Button>
                 </div>
             </div>
         </div>

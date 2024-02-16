@@ -6,6 +6,7 @@ import { Settings } from './components/Settings/Settings';
 import { Toaster } from './components/ui/toaster';
 import { AppManagementProvider } from './components/AppManagement/AppManagementProvider';
 import { OverviewProvider } from './components/Overview/OverviewProvider';
+import { SettingsProvider } from './components/Settings/SettingsProvider';
 
 function App() {
 
@@ -32,7 +33,9 @@ function App() {
                     </Tabs.Content>
 
                     <Tabs.Content value="settings">
-                        <Settings />
+                        <SettingsProvider>
+                            <Settings />
+                        </SettingsProvider>
                     </Tabs.Content>
                 </Box>
             </Tabs.Root>
