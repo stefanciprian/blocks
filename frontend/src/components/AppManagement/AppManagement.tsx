@@ -1,5 +1,5 @@
 import { Button, Card } from '@radix-ui/themes';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form"
 import { useToast } from '../ui/use-toast';
 import { useAppManagementContext } from './AppManagementProvider';
 import { App } from "../../types/App";
+import { AppsDataTable } from './AppsTable/AppsDataTable';
+import { columns } from './AppsTable/Columns';
 
 const AppSchema = z.object({
     name: z
@@ -33,6 +35,7 @@ const defaultValues: AppValues = {
 export function AppManagement() {
     const { toast } = useToast();
     const { createApp, getApps } = useAppManagementContext();
+    const [data, setData] = useState<App[]>([]);
 
     const form = useForm<AppValues>({
         resolver: zodResolver(AppSchema),
@@ -58,8 +61,7 @@ export function AppManagement() {
 
     useEffect(() => {
         getApps().then(apps => {
-            console.log("Apps");
-            console.log(apps);
+            setData(apps);
         });
     }, [getApps]);
 
@@ -125,6 +127,10 @@ export function AppManagement() {
                             </Card>
                         </form>
                     </Form>
+
+                    <div className="container mx-auto py-10">
+                        <AppsDataTable columns={columns} data={data} />
+                    </div>
                 </div>
             </div>
         </>
