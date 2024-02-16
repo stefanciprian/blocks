@@ -1,14 +1,21 @@
 import { createContext, useContext } from 'react';
-import { SelectFolder } from '../../../wailsjs/go/main/App';
+import { GetSelectedApp, SelectFolder } from '../../../wailsjs/go/main/App';
 
 
 interface OverviewContextType {
     selectFolder: () => Promise<string | null>,
+    getSelectedApp: () => Promise<any>,
 }
 
 const OverviewContext = createContext<OverviewContextType>({} as OverviewContextType);
 
 export function OverviewProvider({ children }: any) {
+
+    const getSelectedApp = async () => {
+        const app = await GetSelectedApp();
+        console.log('Selected app:', app);
+        return app;
+    }
 
     const selectFolder = async () => {
         try {
@@ -23,6 +30,7 @@ export function OverviewProvider({ children }: any) {
     };
 
     const contextValue = {
+        getSelectedApp,
         selectFolder,
     }
 

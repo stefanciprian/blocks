@@ -2,13 +2,15 @@ import { useToast } from '../ui/use-toast';
 import { useOverviewContext } from './OverviewProvider';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { App } from '../../types/App';
 
 
 export function Overview() {
-    const { toast } = useToast();
-    const { selectFolder } = useOverviewContext();
     const [path, setPath] = useState('');
+    const { selectFolder, getSelectedApp } = useOverviewContext();
+    const [selectedApp, setSelectedApp] = useState<App | null>(null);
+    const { toast } = useToast();
 
     const handleFolderSelection = async () => {
         const path = await selectFolder();
@@ -31,6 +33,15 @@ export function Overview() {
         })
     }
 
+    useEffect(() => {
+        console.log('Path:', path);
+        console.log('Select folder:', selectFolder);
+
+        getSelectedApp().then((app) => {
+            console.log('Selected app:', app);
+        })
+    }, [])
+
     return (
         <div className="hidden flex-col md:flex">
             <div className="border-b">
@@ -43,7 +54,12 @@ export function Overview() {
                     <div className="flex items-center space-x-2">
                     </div>
                 </div>
-                Select path where the app should be located
+
+                <h2 className="text-3xl font-bold tracking-tight">Selected app:</h2>
+                <p></p>
+
+
+                <h2 className="text-3xl font-bold tracking-tight">Select path where the app should be located:</h2>
 
                 <div className="flex items-center space-x-2">
                     <Input type="email" placeholder="Path" value={path} />

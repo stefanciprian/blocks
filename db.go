@@ -95,8 +95,8 @@ func GetApps(ctx context.Context) []Application {
 	return apps
 }
 
-// Update is_generated to true field for a given id and for the others false
-func UpdateIsGenerated(ctx context.Context, id int) {
+// Update is_selected to true for a given id and for the others false
+func UpdateSelectedApp(ctx context.Context, id int) {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -106,16 +106,47 @@ func UpdateIsGenerated(ctx context.Context, id int) {
 	defer db.Close()
 
 	// Update data
-	statement, err := db.Prepare("UPDATE apps SET is_generated = (id = ?) WHERE id = ?")
+	statement, err := db.Prepare("UPDATE apps SET is_selected = (id = ?)")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to prepare statement: %v", err))
 		return
 	}
 
-	execStatement, err := statement.Exec(id, id)
+	execStatement, err := statement.Exec(id)
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to execute statement: %v", err))
 		return
 	}
 	fmt.Println(execStatement)
+}
+
+// Get the row with is_selected = true
+func GetSelectedApp(ctx context.Context) Application {
+	// Open SQLite database
+	db, err := sql.Open("sqlite3", "./blocks.db")
+	if err != nil {
+		runtime.LogError(ctx, fmt.Sprintf("Failed to open database: %v", err))
+		return Application{}
+	}
+	defer db.Close()
+
+	// Query data
+	rows, err := db.Query("SELECT * FROM apps WHERE is_selected = 1")
+	if err != nil {
+		runtime.LogError(ctx, fmt.Sprintf("Failed to query database: %v", err))
+		return Application{}
+	}
+	defer rows.Close()
+
+	// Get results
+	var app Application
+	for rows.Next() {
+		err = rows.Scan(&app.ID, &app.Name, &app.Description, &app.Path, &app.IsGenerated, &app.IsSelected, &app.CreatedAt, &app.UpdatedAt)
+		if err != nil {
+			runtime.LogError(ctx, fmt.Sprintf("Failed to scan row: %v", err))
+			return Application{}
+		}
+	}
+
+	return app
 }

@@ -47,6 +47,10 @@ func (a *App) CheckNodeJS() (string, error) {
 	return version, nil
 }
 
+func (a *App) GetSelectedApp() Application {
+	return GetSelectedApp(a.ctx)
+}
+
 func (a *App) GetApps() []Application {
 	return GetApps(a.ctx)
 }
@@ -73,4 +77,8 @@ func (a *App) SelectFolder() string {
 	}
 
 	return folderPath
+}
+
+func (a *App) SelectApp(id int) {
+	UpdateSelectedApp(a.ctx, id)
 }

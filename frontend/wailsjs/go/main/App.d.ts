@@ -6,6 +6,10 @@ export function CheckNodeJS():Promise<string>;
 
 export function GetApps():Promise<Array<main.Application>>;
 
+export function GetSelectedApp():Promise<main.Application>;
+
 export function InsertApp(arg1:string):Promise<void>;
+
+export function SelectApp(arg1:number):Promise<void>;
 
 export function SelectFolder():Promise<string>;
