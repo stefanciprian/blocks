@@ -46,7 +46,9 @@ export function AppManagement() {
         console.log(data);
         const application: App = {
             name: data.name,
-            description: data.description
+            description: data.description,
+            path: "N/A",
+            is_generated: false,
         }
         const result = await createApp(JSON.stringify(application));
         console.log(result);

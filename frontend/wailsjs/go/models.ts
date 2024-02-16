@@ -4,6 +4,8 @@ export namespace main {
 	    id?: number;
 	    name: string;
 	    description: string;
+	    path?: string;
+	    is_generated?: boolean;
 	    // Go type: time
 	    created_at?: any;
 	    // Go type: time
@@ -18,6 +20,8 @@ export namespace main {
 	        this.id = source["id"];
 	        this.name = source["name"];
 	        this.description = source["description"];
+	        this.path = source["path"];
+	        this.is_generated = source["is_generated"];
 	        this.created_at = this.convertValues(source["created_at"], null);
 	        this.updated_at = this.convertValues(source["updated_at"], null);
 	    }

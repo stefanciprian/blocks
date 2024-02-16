@@ -16,6 +16,14 @@ export const columns: ColumnDef<App>[] = [
         header: "Description",
     },
     {
+        accessorKey: "path",
+        header: "Path",
+    },
+    {
+        accessorKey: "is_generated",
+        header: "Is Generated",
+    },
+    {
         accessorKey: "created_at",
         header: "Created At",
     },
