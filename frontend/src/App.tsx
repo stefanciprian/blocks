@@ -5,6 +5,7 @@ import { Overview } from './components/Overview/Overview';
 import { Settings } from './components/Settings/Settings';
 import { Toaster } from './components/ui/toaster';
 import { AppManagementProvider } from './components/AppManagement/AppManagementProvider';
+import { OverviewProvider } from './components/Overview/OverviewProvider';
 
 function App() {
 
@@ -25,7 +26,9 @@ function App() {
                     </Tabs.Content>
 
                     <Tabs.Content value="overview">
-                        <Overview />
+                        <OverviewProvider>
+                            <Overview />
+                        </OverviewProvider>
                     </Tabs.Content>
 
                     <Tabs.Content value="settings">

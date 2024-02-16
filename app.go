@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -25,7 +28,10 @@ func (a *App) startup(ctx context.Context) {
 	CreateAppTable(ctx)
 }
 
-// InsertApp inserts a new app into the database
+func (a *App) GetApps() []Application {
+	return GetApps(a.ctx)
+}
+
 func (a *App) InsertApp(applicationJsonString string) {
 	var application Application
 	err := json.Unmarshal([]byte(applicationJsonString), &application)
@@ -35,6 +41,17 @@ func (a *App) InsertApp(applicationJsonString string) {
 	AddApp(a.ctx, application)
 }
 
-func (a *App) GetApps() []Application {
-	return GetApps(a.ctx)
+func (a *App) SelectFolder() string {
+	// This will open a folder selection dialog and return the selected path
+	// Note: This is a placeholder. You'll need to implement the dialog functionality depending on your OS.
+	folderPath, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Select Folder",
+	})
+
+	if err != nil {
+		fmt.Println("Error selecting folder:", err)
+		return ""
+	}
+
+	return folderPath
 }

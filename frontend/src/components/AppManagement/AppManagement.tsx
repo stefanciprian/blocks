@@ -57,6 +57,10 @@ export function AppManagement() {
             ${JSON.stringify(data, null, 2)}
             </pre>`,
         })
+
+        getApps().then(apps => {
+            setData(apps);
+        });
     }
 
     useEffect(() => {

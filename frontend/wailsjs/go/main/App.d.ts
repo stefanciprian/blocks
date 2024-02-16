@@ -5,3 +5,5 @@ import {main} from '../models';
 export function GetApps():Promise<Array<main.Application>>;
 
 export function InsertApp(arg1:string):Promise<void>;
+
+export function SelectFolder():Promise<string>;

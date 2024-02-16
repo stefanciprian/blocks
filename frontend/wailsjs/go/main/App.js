@@ -9,3 +9,7 @@ export function GetApps() {
 export function InsertApp(arg1) {
   return window['go']['main']['App']['InsertApp'](arg1);
 }
+
+export function SelectFolder() {
+  return window['go']['main']['App']['SelectFolder']();
+}
