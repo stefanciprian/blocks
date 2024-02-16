@@ -30,5 +30,9 @@ export const columns: ColumnDef<App>[] = [
     {
         accessorKey: "updated_at",
         header: "Updated At",
+    },
+    {
+        accessorKey: "is_selected",
+        header: "Is Selected",
     }
 ]

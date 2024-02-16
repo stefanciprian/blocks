@@ -6,6 +6,7 @@ export namespace main {
 	    description: string;
 	    path?: string;
 	    is_generated?: boolean;
+	    is_selected?: boolean;
 	    // Go type: time
 	    created_at?: any;
 	    // Go type: time
@@ -22,6 +23,7 @@ export namespace main {
 	        this.description = source["description"];
 	        this.path = source["path"];
 	        this.is_generated = source["is_generated"];
+	        this.is_selected = source["is_selected"];
 	        this.created_at = this.convertValues(source["created_at"], null);
 	        this.updated_at = this.convertValues(source["updated_at"], null);
 	    }
