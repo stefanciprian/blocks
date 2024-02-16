@@ -6,10 +6,6 @@ export function GetApps() {
   return window['go']['main']['App']['GetApps']();
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
-}
-
 export function InsertApp(arg1) {
   return window['go']['main']['App']['InsertApp'](arg1);
 }

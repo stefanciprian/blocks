@@ -1,6 +1,5 @@
-import { Button, Card, Text } from '@radix-ui/themes';
-import { Greet } from '../../../wailsjs/go/main/App';
-import { useEffect, useState } from 'react';
+import { Button, Card } from '@radix-ui/themes';
+import { useEffect } from 'react';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
@@ -34,14 +33,6 @@ const defaultValues: AppValues = {
 export function AppManagement() {
     const { toast } = useToast();
     const { createApp, getApps } = useAppManagementContext();
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
-
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
 
     const form = useForm<AppValues>({
         resolver: zodResolver(AppSchema),
@@ -54,7 +45,7 @@ export function AppManagement() {
             name: data.name,
             description: data.description
         }
-        const result = await createApp(application);
+        const result = await createApp(JSON.stringify(application));
         console.log(result);
         toast({
             title: "App created",

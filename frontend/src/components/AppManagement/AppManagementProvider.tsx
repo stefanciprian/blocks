@@ -5,14 +5,14 @@ import { GetApps, InsertApp } from '../../../wailsjs/go/main/App';
 
 interface AppManagementContextType {
     getApps: () => Promise<App[]>,
-    createApp: (app: App) => Promise<void>,
+    createApp: (app: string) => Promise<void>,
 }
 
 const AppManagementContext = createContext<AppManagementContextType>({} as AppManagementContextType);
 
 export function AppManagementProvider({ children }: any) {
     const getApps = async () => GetApps();
-    const createApp = async (app: App) => InsertApp(app);
+    const createApp = async (appJsonSTring: string) => InsertApp(appJsonSTring);
 
     const contextValue = {
         getApps,

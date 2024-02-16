@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
+	"log"
 )
 
 // App struct
@@ -24,13 +25,13 @@ func (a *App) startup(ctx context.Context) {
 	CreateAppTable(ctx)
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
 // InsertApp inserts a new app into the database
-func (a *App) InsertApp(application Application) {
+func (a *App) InsertApp(applicationJsonString string) {
+	var application Application
+	err := json.Unmarshal([]byte(applicationJsonString), &application)
+	if err != nil {
+		log.Fatal(err)
+	}
 	AddApp(a.ctx, application)
 }
 

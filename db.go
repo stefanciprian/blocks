@@ -4,16 +4,18 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Application struct {
-	id          int
-	name        string
-	description string
-	createdAt   string `db:"created_at"`
-	updatedAt   string `db:"updated_at"`
+	ID          *int       `json:"id,omitempty"` // Pointer makes it optional
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	CreatedAt   *time.Time `json:"created_at,omitempty" db:"created_at"` // Pointer makes it optional
+	UpdatedAt   *time.Time `json:"updated_at,omitempty" db:"updated_at"` // Pointer makes it optional
 }
 
 func AddApp(ctx context.Context, application Application) {
@@ -26,12 +28,18 @@ func AddApp(ctx context.Context, application Application) {
 	defer db.Close()
 
 	// Insert data
-	statement, err := db.Prepare("INSERT INTO apps (name, description, created_at, updated_at) VALUES (?)")
+	statement, err := db.Prepare("INSERT INTO apps (name, description, created_at, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to prepare statement: %v", err))
 		return
 	}
-	statement.Exec(application.name, application.description, application.createdAt, application.updatedAt)
+
+	execStatement, err := statement.Exec(application.Name, application.Description)
+	if err != nil {
+		runtime.LogError(ctx, fmt.Sprintf("Failed to execute statement: %v", err))
+		return
+	}
+	fmt.Println(execStatement)
 }
 
 func CreateAppTable(ctx context.Context) {
@@ -73,7 +81,7 @@ func GetApps(ctx context.Context) []Application {
 	var apps []Application
 	for rows.Next() {
 		var app Application
-		err = rows.Scan(&app.id, &app.name, &app.description, &app.createdAt, &app.updatedAt)
+		err = rows.Scan(&app.ID, &app.Name, &app.Description, &app.CreatedAt, &app.UpdatedAt)
 		if err != nil {
 			runtime.LogError(ctx, fmt.Sprintf("Failed to scan row: %v", err))
 			return nil

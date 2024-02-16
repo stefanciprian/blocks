@@ -4,6 +4,4 @@ import {main} from '../models';
 
 export function GetApps():Promise<Array<main.Application>>;
 
-export function Greet(arg1:string):Promise<string>;
-
-export function InsertApp(arg1:main.Application):Promise<void>;
+export function InsertApp(arg1:string):Promise<void>;
