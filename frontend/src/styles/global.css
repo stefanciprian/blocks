@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .border-border {
+    /* Your custom CSS here */
+    /*border: 1px solid black;*/
+  }
+  .bg-background {
+    /* Example: Define a specific background color */
+    /* background-color: #bada55; */
+    /* Or use any CSS property to set up a background */
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
