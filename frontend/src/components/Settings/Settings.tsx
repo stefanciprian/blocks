@@ -2,6 +2,8 @@ import { Separator } from "../ui/separator";
 import { useEffect, useState } from 'react';
 import { useSettingsContext } from './SettingsProvider';
 
+//const SettingsSchema = z.object({
+
 export function Settings() {
     const [nodeJSStatus, setNodeJSStatus] = useState('checking');
     const { checkNodeJS } = useSettingsContext();

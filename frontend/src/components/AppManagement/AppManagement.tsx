@@ -1,5 +1,4 @@
 import { Button, Card } from '@radix-ui/themes';
-import { useEffect, useState } from 'react';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
@@ -11,6 +10,7 @@ import { useAppManagementContext } from './AppManagementProvider';
 import { App } from "../../types/App";
 import { AppsDataTable } from './AppsTable/AppsDataTable';
 import { columns } from './AppsTable/Columns';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 const AppSchema = z.object({
     name: z
@@ -33,9 +33,13 @@ const defaultValues: AppValues = {
 }
 
 export function AppManagement() {
+    // Access the client
+    const queryClient = useQueryClient()
+
     const { toast } = useToast();
     const { createApp, getApps } = useAppManagementContext();
-    const [data, setData] = useState<App[]>([]);
+
+    const { data: response, isLoading, error } = useQuery('apps', getApps)
 
     const form = useForm<AppValues>({
         resolver: zodResolver(AppSchema),
@@ -51,7 +55,7 @@ export function AppManagement() {
             is_generated: false,
             is_selected: false,
         }
-        const result = await createApp(JSON.stringify(application));
+        const result = mutation.mutate(JSON.stringify(application))
         console.log(result);
         toast({
             title: "App created",
@@ -60,17 +64,18 @@ export function AppManagement() {
             ${JSON.stringify(data, null, 2)}
             </pre>`,
         })
-
-        getApps().then(apps => {
-            setData(apps);
-        });
     }
 
-    useEffect(() => {
-        getApps().then(apps => {
-            setData(apps);
-        });
-    }, [getApps]);
+    // Mutations
+    const mutation = useMutation(createApp, {
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries('apps')
+        },
+    })
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Something went wrong...</div>;
 
     return (
         <>
@@ -96,7 +101,7 @@ export function AppManagement() {
                                         name="name"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Name</FormLabel>
+                                                <FormLabel>Name:</FormLabel>
                                                 <FormControl>
                                                     <input type="text" {...field} />
                                                 </FormControl>
@@ -112,7 +117,7 @@ export function AppManagement() {
                                         name="description"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Description</FormLabel>
+                                                <FormLabel>Description:</FormLabel>
                                                 <FormControl>
                                                     <Textarea placeholder="Please include all information relevant to you." {...field} />
                                                 </FormControl>
@@ -132,7 +137,7 @@ export function AppManagement() {
                     </Form>
 
                     <div className="container mx-auto">
-                        <AppsDataTable columns={columns} data={data} />
+                        <AppsDataTable columns={columns} data={response || []} />
                     </div>
                 </div>
             </div>
