@@ -1,0 +1,27 @@
+name: Wails Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.21' # Specify the Go version, adjust as necessary
+
+    - name: Build Wails app
+      run: |
+        go get -u github.com/wailsapp/wails/cmd/wails
+        wails build
+
+    # Optional steps to deploy or release your app could go here
