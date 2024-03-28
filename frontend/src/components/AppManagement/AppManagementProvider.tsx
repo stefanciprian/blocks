@@ -1,22 +1,22 @@
 import { createContext, useContext } from 'react';
-import {App} from '../../types/App';
-import { GetApps, InsertApp } from '../../../wailsjs/go/main/App';
+import { Application } from '../../types/Application';
+import { GetApplications, InsertApplication } from '../../../wailsjs/go/main/App';
 
 
 interface AppManagementContextType {
-    getApps: () => Promise<App[]>,
-    createApp: (app: string) => Promise<void>,
+    getApplications: () => Promise<Application[]>,
+    createApplication: (applicationJsonString: string) => Promise<void>,
 }
 
 const AppManagementContext = createContext<AppManagementContextType>({} as AppManagementContextType);
 
 export function AppManagementProvider({ children }: any) {
-    const getApps = async () => GetApps();
-    const createApp = async (appJsonSTring: string) => InsertApp(appJsonSTring);
+    const getApplications = async () => GetApplications();
+    const createApplication = async (applicationJsonString: string) => InsertApplication(applicationJsonString);
 
     const contextValue = {
-        getApps,
-        createApp,
+        getApplications,
+        createApplication,
     }
 
     return (

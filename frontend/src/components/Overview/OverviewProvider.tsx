@@ -1,32 +1,32 @@
 import { createContext, useContext } from 'react';
-import { GenerateApp, GetSelectedApp, SelectFolder } from '../../../wailsjs/go/main/App';
-import { App } from '@/src/types/App';
+import { GenerateApplication, GetSelectedApplication, SelectFolder } from '../../../wailsjs/go/main/App';
+import { Application } from '@/src/types/Application';
 
 
 interface OverviewContextType {
     selectFolder: () => Promise<string | null>,
-    generateApp: (app: App) => Promise<void>,
-    getSelectedApp: () => Promise<any>,
+    generateApplication: (app: Application) => Promise<void>,
+    getSelectedApplication: () => Promise<any>,
 }
 
 const OverviewContext = createContext<OverviewContextType>({} as OverviewContextType);
 
 export function OverviewProvider({ children }: any) {
 
-    const getSelectedApp = async () => {
-        const app = await GetSelectedApp();
-        console.log('Selected app:', app);
-        return app;
+    const getSelectedApplication = async () => {
+        const application = await GetSelectedApplication();
+        console.log('Selected application:', application);
+        return application;
     }
 
-    const generateApp = async (app: App) => {
-        console.log('Generate app:', app);
-        // Use the app as needed in your application
+    const generateApplication = async (application: Application) => {
+        console.log('Generate application:', application);
+        // Use the application as needed in your application
         try {
-            const result = await GenerateApp(JSON.stringify(app));
-            console.log('Generated app:', result);
+            const result = await GenerateApplication(JSON.stringify(application));
+            console.log('Generated application:', result);
         } catch (error) {
-            console.error('Error generating app:', error);
+            console.error('Error generating application:', error);
         }
     }
 
@@ -43,8 +43,8 @@ export function OverviewProvider({ children }: any) {
     };
 
     const contextValue = {
-        getSelectedApp,
-        generateApp,
+        getSelectedApplication,
+        generateApplication,
         selectFolder,
     }
 

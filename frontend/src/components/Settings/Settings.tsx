@@ -1,20 +1,67 @@
 import { Separator } from "../ui/separator";
 import { useEffect, useState } from 'react';
 import { useSettingsContext } from './SettingsProvider';
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '../ui/form';
+import { useForm } from "react-hook-form";
+import { Button, Card } from '@radix-ui/themes';
+import { Setting } from "@/src/types/Setting";
+import { useToast } from "../ui/use-toast";
 
-//const SettingsSchema = z.object({
+const SettingsSchema = z.object({
+    notion_api_key: z.string().nonempty("Text is required"),
+})
+
+type SettingsValues = z.infer<typeof SettingsSchema>;
+
+const defaultValues: SettingsValues = {
+    notion_api_key: '',
+}
 
 export function Settings() {
-    const [nodeJSStatus, setNodeJSStatus] = useState('checking');
-    const { checkNodeJS } = useSettingsContext();
+    // Access the client
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        async function checkNodeJSStatus() {
-            const response = await checkNodeJS();
-            setNodeJSStatus(response);
+    const { toast } = useToast();
+    const { checkNodeJS, updateSetting } = useSettingsContext();
+
+    const { data: nodeJSVersionResponse, isLoading, error } = useQuery('apps', checkNodeJS)
+
+    const form = useForm<SettingsValues>({
+        resolver: zodResolver(SettingsSchema),
+        defaultValues,
+    })
+
+    const onSubmit = async (data: SettingsValues) => {
+        console.log(data);
+        const setting: Setting = {
+            name: "notion_api_key",
+            value: data.notion_api_key,
         }
-        checkNodeJSStatus();
-    }, [checkNodeJS]);
+        const result = mutation.mutate(setting)
+        console.log(result);
+
+        toast({
+            title: "Updated settings",
+            description: `Settings updated successfully.
+            <pre>
+            ${JSON.stringify(data, null, 2)}
+            </pre>`,
+        })
+    }
+
+    // Mutations
+    const mutation = useMutation((setting: Setting) => updateSetting(JSON.stringify(setting)), {
+        onSuccess: () => {
+            queryClient.invalidateQueries('settings')
+        }
+    })
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Something went wrong...</div>;
 
     return (
         <div className="hidden flex-col md:flex">
@@ -35,9 +82,43 @@ export function Settings() {
                     <div className="flex h-5 items-center space-x-4 text-sm">
                         <div>NodeJS Status</div>
                         <Separator orientation="vertical" />
-                        <div>{nodeJSStatus}</div>
+                        <div>{nodeJSVersionResponse}</div>
                     </div>
                 </div>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Create a new App</CardTitle>
+                                <CardDescription>
+                                    Create a new app by filling in the details below.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="notion_api_key"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Notion API Key:</FormLabel>
+                                            <FormControl>
+                                                <input type="text" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Notion API Key is required to access the Notion API.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                            <CardFooter className="justify-between space-x-2">
+                                <Button type="submit">Submit</Button>
+                            </CardFooter>
+                        </Card>
+                    </form>
+                </Form>
             </div>
         </div>
     )

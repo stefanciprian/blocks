@@ -1,9 +1,12 @@
-import { CheckNodeJS } from '../../../wailsjs/go/main/App';
+import { Setting } from '@/src/types/Setting';
+import { CheckNodeJS, UpdateSetting } from '../../../wailsjs/go/main/App';
 import { createContext, useContext } from 'react';
+
 
 
 interface SettingsContextType {
     checkNodeJS: () => Promise<any>,
+    updateSetting: (settingJsonString: string) => Promise<void>,
 }
 
 const SettingsContext = createContext<SettingsContextType>({} as SettingsContextType);
@@ -21,8 +24,12 @@ export function SettingsProvider({ children }: any) {
         }
     }
 
+    const updateSetting = async (settingJsonString: string) => UpdateSetting(settingJsonString);
+
+
     const contextValue = {
         checkNodeJS,
+        updateSetting,
     }
 
     return (

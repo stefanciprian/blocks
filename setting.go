@@ -96,6 +96,26 @@ func GetSetting(ctx context.Context, name string) (Setting, error) {
 	return setting, nil
 }
 
+func SettingExists(ctx context.Context, name string) bool {
+	// Open SQLite database
+	db, err := sql.Open("sqlite3", "./blocks.db")
+	if err != nil {
+		runtime.LogError(ctx, fmt.Sprintf("Failed to open database: %v", err))
+		return false
+	}
+	defer db.Close()
+
+	// Query data
+	row := db.QueryRow("SELECT * FROM settings WHERE name = ?", name)
+	var setting Setting
+	err = row.Scan(&setting.ID, &setting.Name, &setting.Value, &setting.CreatedAt, &setting.UpdatedAt)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
 func UpdateSetting(ctx context.Context, setting Setting) error {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")

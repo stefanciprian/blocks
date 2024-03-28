@@ -21,7 +21,7 @@ type Application struct {
 	UpdatedAt   *time.Time `json:"updated_at,omitempty" db:"updated_at"` // Pointer makes it optional
 }
 
-func AddApp(ctx context.Context, application Application) {
+func AddApplication(ctx context.Context, application Application) {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -31,7 +31,7 @@ func AddApp(ctx context.Context, application Application) {
 	defer db.Close()
 
 	// Insert data
-	statement, err := db.Prepare("INSERT INTO apps (name, description, path, is_generated, is_selected, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
+	statement, err := db.Prepare("INSERT INTO applications (name, description, path, is_generated, is_selected, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to prepare statement: %v", err))
 		return
@@ -45,7 +45,7 @@ func AddApp(ctx context.Context, application Application) {
 	fmt.Println(execStatement)
 }
 
-func CreateAppTable(ctx context.Context) {
+func CreateApplicationTable(ctx context.Context) {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -55,7 +55,7 @@ func CreateAppTable(ctx context.Context) {
 	defer db.Close()
 
 	// Create table
-	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS apps (id INTEGER PRIMARY KEY, name TEXT, description TEXT, path TEXT, is_generated BOOLEAN, is_selected BOOLEAN, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)")
+	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS applications (id INTEGER PRIMARY KEY, name TEXT, description TEXT, path TEXT, is_generated BOOLEAN, is_selected BOOLEAN, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to create table: %v", err))
 		return
@@ -63,7 +63,7 @@ func CreateAppTable(ctx context.Context) {
 	statement.Exec()
 }
 
-func GetApps(ctx context.Context) []Application {
+func GetApplications(ctx context.Context) []Application {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -73,7 +73,7 @@ func GetApps(ctx context.Context) []Application {
 	defer db.Close()
 
 	// Query data
-	rows, err := db.Query("SELECT * FROM apps")
+	rows, err := db.Query("SELECT * FROM applications")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to query database: %v", err))
 		return nil
@@ -81,22 +81,22 @@ func GetApps(ctx context.Context) []Application {
 	defer rows.Close()
 
 	// Get results
-	var apps []Application
+	var applications []Application
 	for rows.Next() {
-		var app Application
-		err = rows.Scan(&app.ID, &app.Name, &app.Description, &app.Path, &app.IsGenerated, &app.IsSelected, &app.CreatedAt, &app.UpdatedAt)
+		var application Application
+		err = rows.Scan(&application.ID, &application.Name, &application.Description, &application.Path, &application.IsGenerated, &application.IsSelected, &application.CreatedAt, &application.UpdatedAt)
 		if err != nil {
 			runtime.LogError(ctx, fmt.Sprintf("Failed to scan row: %v", err))
 			return nil
 		}
-		apps = append(apps, app)
+		applications = append(applications, application)
 	}
 
-	return apps
+	return applications
 }
 
 // Update is_selected to true for a given id and for the others false
-func UpdateSelectedApp(ctx context.Context, id int) {
+func UpdateSelectedApplication(ctx context.Context, id int) {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -106,7 +106,7 @@ func UpdateSelectedApp(ctx context.Context, id int) {
 	defer db.Close()
 
 	// Update data
-	statement, err := db.Prepare("UPDATE apps SET is_selected = (id = ?)")
+	statement, err := db.Prepare("UPDATE applications SET is_selected = (id = ?)")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to prepare statement: %v", err))
 		return
@@ -121,7 +121,7 @@ func UpdateSelectedApp(ctx context.Context, id int) {
 }
 
 // Get the row with is_selected = true
-func GetSelectedApp(ctx context.Context) Application {
+func GetSelectedApplication(ctx context.Context) Application {
 	// Open SQLite database
 	db, err := sql.Open("sqlite3", "./blocks.db")
 	if err != nil {
@@ -131,7 +131,7 @@ func GetSelectedApp(ctx context.Context) Application {
 	defer db.Close()
 
 	// Query data
-	rows, err := db.Query("SELECT * FROM apps WHERE is_selected = 1")
+	rows, err := db.Query("SELECT * FROM applications WHERE is_selected = 1")
 	if err != nil {
 		runtime.LogError(ctx, fmt.Sprintf("Failed to query database: %v", err))
 		return Application{}
@@ -139,14 +139,14 @@ func GetSelectedApp(ctx context.Context) Application {
 	defer rows.Close()
 
 	// Get results
-	var app Application
+	var application Application
 	for rows.Next() {
-		err = rows.Scan(&app.ID, &app.Name, &app.Description, &app.Path, &app.IsGenerated, &app.IsSelected, &app.CreatedAt, &app.UpdatedAt)
+		err = rows.Scan(&application.ID, &application.Name, &application.Description, &application.Path, &application.IsGenerated, &application.IsSelected, &application.CreatedAt, &application.UpdatedAt)
 		if err != nil {
 			runtime.LogError(ctx, fmt.Sprintf("Failed to scan row: %v", err))
 			return Application{}
 		}
 	}
 
-	return app
+	return application
 }

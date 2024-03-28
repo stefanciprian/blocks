@@ -7,9 +7,9 @@ import { Textarea } from '../ui/textarea';
 import { useForm } from "react-hook-form"
 import { useToast } from '../ui/use-toast';
 import { useAppManagementContext } from './AppManagementProvider';
-import { App } from "../../types/App";
-import { AppsDataTable } from './AppsTable/AppsDataTable';
-import { columns } from './AppsTable/Columns';
+import { Application } from "../../types/Application";
+import { ApplicationsDataTable } from './ApplicationsDataTable/ApplicationsDataTable';
+import { columns } from './ApplicationsDataTable/Columns';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 const AppSchema = z.object({
@@ -37,9 +37,9 @@ export function AppManagement() {
     const queryClient = useQueryClient()
 
     const { toast } = useToast();
-    const { createApp, getApps } = useAppManagementContext();
+    const { createApplication, getApplications } = useAppManagementContext();
 
-    const { data: response, isLoading, error } = useQuery('apps', getApps)
+    const { data: response, isLoading, error } = useQuery('applications', getApplications)
 
     const form = useForm<AppValues>({
         resolver: zodResolver(AppSchema),
@@ -48,7 +48,7 @@ export function AppManagement() {
 
     const onSubmit = async (data: AppValues) => {
         console.log(data);
-        const application: App = {
+        const application: Application = {
             name: data.name,
             description: data.description,
             path: "N/A",
@@ -58,8 +58,8 @@ export function AppManagement() {
         const result = mutation.mutate(JSON.stringify(application))
         console.log(result);
         toast({
-            title: "App created",
-            description: `We have created the app for you.
+            title: "Application created",
+            description: `We have created the application for you.
             <pre>
             ${JSON.stringify(data, null, 2)}
             </pre>`,
@@ -67,7 +67,7 @@ export function AppManagement() {
     }
 
     // Mutations
-    const mutation = useMutation(createApp, {
+    const mutation = useMutation(createApplication, {
         onSuccess: () => {
             // Invalidate and refetch
             queryClient.invalidateQueries('apps')
@@ -82,7 +82,7 @@ export function AppManagement() {
             <div className="hidden flex-col md:flex">
                 <div className="border-b">
                     <div className="flex h-16 items-center px-4">
-                        <h2 className="text-2xl font-bold tracking-tight">Create a new app or Select an existing one.</h2>
+                        <h2 className="text-2xl font-bold tracking-tight">Create a new application or Select an existing one.</h2>
                     </div>
                 </div>
                 <div className="flex-1 space-y-4 p-8 pt-6">
@@ -137,7 +137,7 @@ export function AppManagement() {
                     </Form>
 
                     <div className="container mx-auto">
-                        <AppsDataTable columns={columns} data={response || []} />
+                        <ApplicationsDataTable columns={columns} data={response || []} />
                     </div>
                 </div>
             </div>

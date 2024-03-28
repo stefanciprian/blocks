@@ -1,4 +1,4 @@
-export type App = {
+export type Application = {
   id?: number;
   name: string;
   description: string;

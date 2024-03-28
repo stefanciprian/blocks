@@ -1,12 +1,12 @@
-import { App } from "@/src/types/App"
+import { Application } from "@/src/types/Application"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "../../ui/button"
-import { SelectApp } from '../../../../wailsjs/go/main/App';
+import { SelectApplication } from '../../../../wailsjs/go/main/App';
 import { useToast } from "../../ui/use-toast";
 import { useAppManagementContext } from '../AppManagementProvider';
 
 
-export const columns: ColumnDef<App>[] = [
+export const columns: ColumnDef<Application>[] = [
     {
         accessorKey: "id",
         header: "ID",
@@ -41,9 +41,9 @@ export const columns: ColumnDef<App>[] = [
         cell: ({ row }) => {
             const { toast } = useToast()
             const is_selected = row.original.is_selected;
-            
+
             const handleSelect = async () => {
-                const updateAppAsSelected = await SelectApp(row.original.id || 0);
+                const updateAppAsSelected = await SelectApplication(row.original.id || 0);
                 console.log('Update app as selected:', updateAppAsSelected);
                 toast({
                     title: "Selected App",

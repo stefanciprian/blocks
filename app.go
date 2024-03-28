@@ -28,7 +28,14 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
 	// Create the app table
-	CreateAppTable(ctx)
+	CreateApplicationTable(ctx)
+	// Create the setting table
+	CreateSettingTable(ctx)
+
+	// Insert setting if it doesn't exist
+	if !SettingExists(ctx, "notion_api_key") {
+		AddSetting(ctx, Setting{Name: "notion_api_key", Value: ""})
+	}
 }
 
 // CheckNodeJS checks if Node.js is installed and returns its version or an error.
@@ -48,7 +55,7 @@ func (a *App) CheckNodeJS() (string, error) {
 	return version, nil
 }
 
-func (a *App) GenerateApp(applicationJsonString string) {
+func (a *App) GenerateApplication(applicationJsonString string) {
 	var application Application
 	err := json.Unmarshal([]byte(applicationJsonString), &application)
 	if err != nil {
@@ -95,24 +102,28 @@ func (a *App) GenerateApp(applicationJsonString string) {
 
 	// Success
 
-	fmt.Println("App generated successfully!")
+	fmt.Println("Application generated successfully!")
 }
 
-func (a *App) GetSelectedApp() Application {
-	return GetSelectedApp(a.ctx)
+func (a *App) GetApplications() []Application {
+	return GetApplications(a.ctx)
 }
 
-func (a *App) GetApps() []Application {
-	return GetApps(a.ctx)
+func (a *App) GetSelectedApplication() Application {
+	return GetSelectedApplication(a.ctx)
 }
 
-func (a *App) InsertApp(applicationJsonString string) {
+func (a *App) InsertApplication(applicationJsonString string) {
 	var application Application
 	err := json.Unmarshal([]byte(applicationJsonString), &application)
 	if err != nil {
 		log.Fatal(err)
 	}
-	AddApp(a.ctx, application)
+	AddApplication(a.ctx, application)
+}
+
+func (a *App) SelectApplication(id int) {
+	UpdateSelectedApplication(a.ctx, id)
 }
 
 func (a *App) SelectFolder() string {
@@ -130,6 +141,11 @@ func (a *App) SelectFolder() string {
 	return folderPath
 }
 
-func (a *App) SelectApp(id int) {
-	UpdateSelectedApp(a.ctx, id)
+func (a *App) UpdateSetting(settingsJsonString string) {
+	var setting Setting
+	err := json.Unmarshal([]byte(settingsJsonString), &setting)
+	if err != nil {
+		log.Fatal(err)
+	}
+	UpdateSetting(a.ctx, setting)
 }

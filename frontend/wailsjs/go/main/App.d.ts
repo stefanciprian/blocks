@@ -4,14 +4,16 @@ import {main} from '../models';
 
 export function CheckNodeJS():Promise<string>;
 
-export function GenerateApp(arg1:string):Promise<void>;
+export function GenerateApplication(arg1:string):Promise<void>;
 
-export function GetApps():Promise<Array<main.Application>>;
+export function GetApplications():Promise<Array<main.Application>>;
 
-export function GetSelectedApp():Promise<main.Application>;
+export function GetSelectedApplication():Promise<main.Application>;
 
-export function InsertApp(arg1:string):Promise<void>;
+export function InsertApplication(arg1:string):Promise<void>;
 
-export function SelectApp(arg1:number):Promise<void>;
+export function SelectApplication(arg1:number):Promise<void>;
 
 export function SelectFolder():Promise<string>;
+
+export function UpdateSetting(arg1:string):Promise<void>;
