@@ -33,7 +33,7 @@ jobs:
           cp wails.json ~/.wails/
           export LOG_LEVEL=debug
           export GODEBUG=1
-          wails build -p
+          wails build
           echo "converting .app into a .dmg"
           npm install -g appdmg
           appdmg dmg-spec.json blocks.dmg
@@ -64,7 +64,7 @@ jobs:
           New-Item -ItemType directory -Path "$HOME\.wails" -Force
           Copy-Item -Path "$PWD\wails.json" -Destination "$HOME\.wails\wails.json"
           choco install mingw
-          wails build -p
+          wails build
           Compress-Archive -Path .\build\blocks* -DestinationPath .\blocks.zip
         if: matrix.os == 'windows-latest'
       - name: upload artifact macOS
