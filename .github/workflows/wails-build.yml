@@ -94,6 +94,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: package
+    permissions:  # Add this line and the following one to specify custom permissions
+      contents: write  # This grants the job permission to create releases
     steps:
       - name: Create Release
         id: create_release
