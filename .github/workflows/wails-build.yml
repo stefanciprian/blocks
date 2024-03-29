@@ -50,6 +50,7 @@ jobs:
           export LOG_LEVEL=debug
           export GODEBUG=1
           wails build
+          mv /home/runner/work/blocks/blocks/build/bin/blocks /build/blocks
           tar -czvf blocks.tar.gz ./build/blocks
           # wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           # chmod +x linuxdeploy*.AppImage
