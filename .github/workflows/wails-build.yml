@@ -50,11 +50,12 @@ jobs:
           export LOG_LEVEL=debug
           export GODEBUG=1
           wails build
-          tar -czvf blocks.tar.gz ./home/runner/work/blocks/blocks/build/bin/blocks
+          ls -la /home/runner/work/blocks/blocks/build/bin/blocks
+          tar -czvf blocks.tar.gz /home/runner/work/blocks/blocks/build/bin/blocks
           # wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           # chmod +x linuxdeploy*.AppImage
           # ls ./
-          # ./linuxdeploy*.AppImage --appdir AppDir --executable ./home/runner/work/blocks/blocks/build/bin/blocks --desktop-file=blocks.AppImage.desktop --icon-file=appicon--512.png --output appimage
+          # ./linuxdeploy*.AppImage --appdir AppDir --executable ./build/blocks --desktop-file=blocks.AppImage.desktop --icon-file=appicon--512.png --output appimage
         if: matrix.os == 'ubuntu-latest'
       - name: Build package windows
         run: |
