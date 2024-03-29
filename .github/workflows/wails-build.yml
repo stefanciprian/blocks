@@ -57,35 +57,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
       - name: Build package windows
         run: |
-          # Retrieve the GOPATH
-          $GP = go env GOPATH | Out-String
-          $GP = $GP.Trim()
-          
-          # Update the PATH environment variable to include GOPATH\bin
+          $GP = (go env GOPATH)
           $env:path = "$env:path;$GP\bin"
-          
-          # Echo the OS being used for the build
           echo "building on ${{ matrix.os }}"
-          
-          # Ensure the .wails directory exists
-          $wailsDir = Join-Path -Path $env:HOME -ChildPath ".wails"
-          New-Item -ItemType Directory -Path $wailsDir -Force
-          
-          # Copy wails.json to the .wails directory
-          $wailsConfigSrc = Join-Path -Path $env:PWD -ChildPath "wails.json"
-          $wailsConfigDest = Join-Path -Path $wailsDir -ChildPath "wails.json"
-          Copy-Item -Path $wailsConfigSrc -Destination $wailsConfigDest
-          
-          # Install MinGW using Chocolatey
-          choco install mingw -y
-          
-          # Build the project using Wails
-          wails build
-          
-          # Compress the build output into a zip file
-          $buildDir = Join-Path -Path $env:PWD -ChildPath "build\blocks*"
-          $zipDest = Join-Path -Path $env:PWD -ChildPath "blocks.zip"
-          Compress-Archive -Path $buildDir -DestinationPath $zipDest
+          New-Item -ItemType directory -Path "$HOME\.wails" -Force
+          Copy-Item -Path "$PWD\wails.json" -Destination "$HOME\.wails\wails.json"
+          choco install mingw
+          wails build -p
+          Compress-Archive -Path .\build\blocks* -DestinationPath .\blocks.zip
         if: matrix.os == 'windows-latest'
       - name: upload artifact macOS
         uses: actions/upload-artifact@v1
