@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { Button, Card } from '@radix-ui/themes';
 import { Setting } from "@/src/types/Setting";
 import { useToast } from "../ui/use-toast";
+import { Input } from "../ui/input";
 
 const SettingsSchema = z.object({
     notion_api_key: z.string().nonempty("Text is required"),
@@ -103,7 +104,7 @@ export function Settings() {
                                         <FormItem>
                                             <FormLabel>Notion API Key:</FormLabel>
                                             <FormControl>
-                                                <input type="text" {...field} />
+                                                <Input type="text" {...field} />
                                             </FormControl>
                                             <FormDescription>
                                                 Notion API Key is required to access the Notion API.

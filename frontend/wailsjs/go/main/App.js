@@ -10,12 +10,24 @@ export function GenerateApplication(arg1) {
   return window['go']['main']['App']['GenerateApplication'](arg1);
 }
 
+export function GenerateCSVFromNotionDatabase(arg1) {
+  return window['go']['main']['App']['GenerateCSVFromNotionDatabase'](arg1);
+}
+
 export function GetApplications() {
   return window['go']['main']['App']['GetApplications']();
 }
 
+export function GetNotionDatabase(arg1, arg2) {
+  return window['go']['main']['App']['GetNotionDatabase'](arg1, arg2);
+}
+
 export function GetSelectedApplication() {
   return window['go']['main']['App']['GetSelectedApplication']();
+}
+
+export function ImportCSVFileForNotionDB(arg1, arg2) {
+  return window['go']['main']['App']['ImportCSVFileForNotionDB'](arg1, arg2);
 }
 
 export function InsertApplication(arg1) {

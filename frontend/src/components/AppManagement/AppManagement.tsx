@@ -11,6 +11,7 @@ import { Application } from "../../types/Application";
 import { ApplicationsDataTable } from './ApplicationsDataTable/ApplicationsDataTable';
 import { columns } from './ApplicationsDataTable/Columns';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { Input } from '../ui/input';
 
 const AppSchema = z.object({
     name: z
@@ -103,7 +104,7 @@ export function AppManagement() {
                                             <FormItem>
                                                 <FormLabel>Name:</FormLabel>
                                                 <FormControl>
-                                                    <input type="text" {...field} />
+                                                    <Input type="text" {...field} />
                                                 </FormControl>
                                                 <FormDescription>
                                                     The text should be at least 5 characters long and at most 10 characters long.

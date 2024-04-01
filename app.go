@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/dstotijn/go-notion"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -105,12 +106,29 @@ func (a *App) GenerateApplication(applicationJsonString string) {
 	fmt.Println("Application generated successfully!")
 }
 
+func (a *App) GenerateCSVFromNotionDatabase(databaseJsonString string) {
+	var database notion.Database
+	err := json.Unmarshal([]byte(databaseJsonString), &database)
+	if err != nil {
+		log.Fatal(err)
+	}
+	GenerateCSVFromNotionDatabase(a.ctx, database)
+}
+
 func (a *App) GetApplications() []Application {
 	return GetApplications(a.ctx)
 }
 
+func (a *App) GetNotionDatabase(secretKey string, databaseId string) notion.Database {
+	return GetNotionDatabase(a.ctx, secretKey, databaseId)
+}
+
 func (a *App) GetSelectedApplication() Application {
 	return GetSelectedApplication(a.ctx)
+}
+
+func (a *App) ImportCSVFileForNotionDB(fileData []byte, name string) {
+	ImportCSVFileForNotionDB(a.ctx, fileData, name)
 }
 
 func (a *App) InsertApplication(applicationJsonString string) {
